@@ -7,6 +7,7 @@ ClassImp(tbeam::dutEvent)
 ClassImp(tbeam::condEvent)
 ClassImp(tbeam::TelescopeEvent)
 
+bool debug=false;
 namespace tbeam {
 tbeam::alignmentPars::alignmentPars() 
 {
@@ -74,11 +75,11 @@ tbeam::cluster::cluster():
    fx(0.),
    size(0)
 {
- // cout<<"Create Clust"<<endl;
+  if(debug)cout<<"Create Clust "<<this<<endl;
 }
 
 tbeam::cluster::~cluster(){
- // cout<<"del Clust"<<endl;
+  if(debug)cout<<"del Clust "<<this<<endl;
 }
 
 tbeam::stub::stub():
@@ -86,34 +87,55 @@ tbeam::stub::stub():
    fx(0.),
    direction(0)
 {
- //  cout<<"cstub"<<endl;
+   if(debug)cout<<"create stub "<<this<<endl;
    seeding = 0;//new tbeam::cluster();
    matched = 0;//new tbeam::cluster();
 }
 
 tbeam::stub::~stub(){
+  if(debug)cout<<"delete stub "<<this<<endl;
+  if (seeding){
+    delete seeding;
+    seeding=0;
+  }
+  if (matched){
+    delete matched;
+    matched = 0;
+  }
 }
 
 tbeam::dutEvent::dutEvent():
    stubWord(0),
    stubWordReco(0)
 {
-  //cout<<"c"<<endl;
+  if(debug)cout<<"@@@@ Creating Event@@@@"<<endl;
    //isGood(1)
-   //stubs=std::vector<tbeam::stub*>();
+  stubs=std::vector<tbeam::stub*>();
+  if(debug)cout<<"@@@@ Done Creating Event @@@"<<endl;
 }
 
 tbeam::dutEvent::~dutEvent(){
-//   cout<<"@@@@ DELETING EVENT @@@@ "<<endl; 
+   if(debug)cout<<"@@@@ DELETING EVENT @@@@ "<<endl; 
    //std::cout << "Entering dutEvent destructor!" << std::endl;   
 //   cout<<"---> Looping on stubs..."<<endl;
-   for (unsigned int i=0; i<stubs.size(); i++)
-     if(stubs.at(i))
-       delete stubs.at(i);
-   stubs.clear();
+   for (unsigned int i=0; i<stubs.size(); i++){
+       if(stubs.at(i)){
+         delete stubs.at(i);
+         stubs.at(i)=0;
+       }
+     stubs.clear();
+   }
 
+   for (unsigned int i=0; i<fstubs.size(); i++){
+       if(fstubs.at(i)){
+         delete fstubs.at(i);
+         fstubs.at(i)=0;
+       }
+     fstubs.clear();
+   }
 //   cout<<"---> Looping on stubs DONE !"<<endl;
 //   cout<<"---> Looping on clusters.. "<<endl;
+
    for(std::map<std::string,std::vector<tbeam::cluster *> >::iterator it = clusters.begin(); it != clusters.end(); ++it) {
       //for(std::vector<tbeam::cluster *>::iterator cl = it->second.begin(); cl!=it->second.end(); ++cl){
       for(unsigned int i =0; i<it->second.size(); i++){
@@ -124,7 +146,7 @@ tbeam::dutEvent::~dutEvent(){
       }
       //      clusters.clear();
    }
-//   cout<<"@@@@ DONE DELETING EVENT @@@@"<<endl;
+   if(debug)cout<<"@@@@ DONE DELETING EVENT @@@@"<<endl;
    //std::cout << "Leaving dutEvent destructor!" << std::endl;   
 }
 
@@ -146,12 +168,14 @@ tbeam::condEvent::condEvent() :
    triggerLatency(999999),
    condData(999),
    glibStatus(9999)
-{
+{ 
+  if(debug)cout<<"Creating CondEvent"<<endl;
   //cbcs = std::vector<tbeam::cbc>();
 }
 
 tbeam::TelescopeEvent::TelescopeEvent() 
 {
+   if(debug)cout<<"Creating TelescopeEvent"<<endl;
    xPos = new vector<double>();
    yPos = new vector<double>();
    dxdz = new vector<double>();
@@ -163,6 +187,7 @@ tbeam::TelescopeEvent::TelescopeEvent()
 }
 
 tbeam::TelescopeEvent::~TelescopeEvent() {
+  if(debug)cout<<"Deleting Telescope Event"<<endl;
    delete xPos;
    delete yPos;
    delete dxdz;
@@ -174,6 +199,7 @@ tbeam::TelescopeEvent::~TelescopeEvent() {
 }
 
 tbeam::FeIFourEvent::FeIFourEvent() {
+  if(debug)cout<<"Creating FeIFourEvent"<<endl;
   col = new vector<int>();
   row =new vector<int>();
   tot = new vector<int>();
@@ -183,6 +209,7 @@ tbeam::FeIFourEvent::FeIFourEvent() {
   frameTime = new vector<double>();  
 }
 tbeam::FeIFourEvent::~FeIFourEvent() {
+  if(debug)cout<<"Deleting FeIFourEvent"<<endl;
   delete     col;
   delete     row;
   delete     tot;

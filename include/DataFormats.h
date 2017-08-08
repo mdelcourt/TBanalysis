@@ -9,6 +9,7 @@
 #include<string>
 #include <string>
 #include<stdint.h>
+using namespace std;
 using std::vector;
 using std::map;
 using std::string;

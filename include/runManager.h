@@ -26,13 +26,26 @@ class runProcessor{
     condEvent      * COND; 
     TelescopeEvent * TEL ; 
     FeIFourEvent   * FEI4;
-    vector <track *>   * tracks;
-    vector <FEI4hit *> * fhits;
+    vector <track *>    * tracks;
+    vector <track *>    * matchedTracks;
+    vector <FEI4hit *>  * fhits;
+    vector <cluster *>  * eClusters;
+    vector <cluster *>  * cleanClusters;
     bool * isGood;
     bool GetEvent();
     bool GetCleanEvent();
     void RegisterHisto(TObject *);
     void SaveToFile(string fName);
+    void LoadAlign(string fName,string fei4Name="fei4Align",string dutName ="dutAlign");
+    
+    void     SetEvtId(long int evtId);
+    long int GetEvtId();
+
+    void SetFei4Align(alignPar * p);
+    void SetDutAlign(alignPar * p);
+
+    alignPar * GetFei4Align();
+    alignPar * GetDutAlign();
 };
 
 

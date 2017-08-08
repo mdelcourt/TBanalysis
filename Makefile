@@ -1,7 +1,7 @@
 
 _DEPS= MyHeader.h DataFormats.h alignToolbox.h runManager.h HLobjects.h LinkDef.h
 _OBJ =  alignToolbox.o DataFormats.o runManager.o HLobjects.o Dict.o
-_PLUGINS = memoryTest.out
+_PLUGINS = firstSetOfConstants.out validation.out effMeas.out fineTune.out
 
 IDIR = ./include
 LDIR = ./lib
@@ -16,7 +16,7 @@ CFLAGS = -I$(IDIR) -I./
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 OBJ  = $(patsubst %,$(ODIR)/%,$(_OBJ))
 CC = g++
-COpt = -Wall -Wextra  `root-config --cflags --libs` -std=gnu++11
+COpt = -Wall -Wextra  `root-config --cflags --libs` -O3 
 
 DICTC = Dict.cc
 DICTH = Dict.h
@@ -31,7 +31,7 @@ all:
 	@echo "###### COMPILING DEPENDENCIES..."
 	@make  -j4 $(OBJ)
 	@echo "###### COMPILING $(PLUGINS)..."
-	@make -j4 $(PLUGINS)
+	@make -j8 $(PLUGINS)
 	
 	 
 cint: $(ODIR)/$(DICTC)
@@ -59,3 +59,4 @@ bin/%.out: plugins/%.cc $(OBJ)
 
 clean:
 	rm -rf $(ODIR)/*.o hellomake src/Dict.cc include/Dict.h bin/* Dict_rdict.pcm plugins/*.out
+
